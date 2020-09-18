@@ -1,0 +1,25 @@
+version: '3.4'
+
+services:
+    fastapi:
+        build: .
+        ports:
+            - 8000:8000
+        depends_on:
+            - redis
+        environment:
+            - REDIS_URL=redis
+
+    worker:
+        build: .
+        command: celery -A worker worker --loglevel=info
+        environment:
+            - REDIS_URL=redis
+        depends_on:
+            - redis
+
+    redis:
+        image: redis:latest
+        ports:
+            - 6379:6379
+        command: redis-server
