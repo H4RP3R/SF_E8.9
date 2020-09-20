@@ -12,7 +12,7 @@ class Scrapper:
     def get_page(self):
         err = None
         try:
-            self.page = requests.get(self.url, timeout=0.005)
+            self.page = requests.get(self.url, timeout=10)
         except ConnectionError as err:
             self.error = err
 

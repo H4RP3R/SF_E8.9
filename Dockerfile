@@ -4,6 +4,7 @@ COPY ./app/main.py /app/main.py
 COPY ./app/worker.py /app/worker.py
 COPY ./app/scrapper.py /app/scrapper.py
 COPY ./app/models.py /app/models.py
+COPY ./app/database.py /app/database.py
 COPY requirements.txt /app/requirements.txt
 
 WORKDIR /app

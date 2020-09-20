@@ -7,14 +7,21 @@ services:
             - 8000:8000
         depends_on:
             - redis
+            - postgres
         environment:
-            - REDIS_URL=redis
+            - REDIS_HOST=redis
+            - POSTGRES_USER=app
+            - POSTGRES_PASSWORD=uiGh2lah
+            - POSTGRES_HOST=postgres
 
     worker:
         build: .
         command: celery -A worker worker --loglevel=info
         environment:
-            - REDIS_URL=redis
+            - REDIS_HOST=redis
+            - POSTGRES_USER=app
+            - POSTGRES_PASSWORD=uiGh2lah
+            - POSTGRES_HOST=postgres
         depends_on:
             - redis
 
@@ -23,3 +30,16 @@ services:
         ports:
             - 6379:6379
         command: redis-server
+
+    postgres:
+        image: postgres
+        ports:
+            - 5434:5434
+        build:
+            context: .
+            dockerfile: Dockerfile.postgres
+        environment:
+            POSTGRES_HOST_AUTH_METHOD: trust
+        volumes:
+            - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+        restart: always

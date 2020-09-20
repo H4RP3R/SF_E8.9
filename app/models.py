@@ -1,11 +1,20 @@
-import sqlalchemy
+from sqlalchemy import Enum, Column, ForeignKey, Integer, String, DateTime
+from sqlalchemy.orm import relationship
+import enum
+
+from database import Base
 
 
-class Results(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    address = db.Column(db.String(300), unique=False, nullable=True)
-    words_count = db.Column(db.Integer(120), unique=False, nullable=True)
-    http_status_code = db.Column(db.Integer)
+class Results(Base):
+    __tablename__ = 'results'
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    address = Column(String(300),  unique=False, nullable=True)
+    words_count = Column(Integer(), unique=False, nullable=True)
+    http_status_code = Column(Integer)
+
+    def __str__(self):
+        return f'id: {self.id} | matches: {self.words_count} | code {self.http_status_code}'
 
 
 class TaskStatus (enum.Enum):
@@ -14,9 +23,14 @@ class TaskStatus (enum.Enum):
     FINISHED = 3
 
 
-class Tasks(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    address = db.Column(db.String(300), unique=False, nullable=True)
-    timestamp = db.Columnt(db.DateTime())
-    task_status = db.Column(Enum(TaskStatus))
-    http_status = db.Column(db.Integer)
+class Tasks(Base):
+    __tablename__ = 'tasks'
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    address = Column(String(300), unique=False, nullable=True)
+    timestamp = Column(DateTime())
+    task_status = Column(Enum(TaskStatus))
+    http_status_code = Column(Integer, nullable=True)
+
+    def __str__(self):
+        return f'id: {self.id} | status: {self.task_status} | code {self.http_status_code}'
