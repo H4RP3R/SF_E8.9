@@ -13,8 +13,8 @@ class Scrapper:
         err = None
         try:
             self.page = requests.get(self.url, timeout=10)
-        except ConnectionError as err:
-            self.error = err
+        except:
+            err = 'ConnectionError'
 
         return err
 

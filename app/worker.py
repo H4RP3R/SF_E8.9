@@ -1,4 +1,5 @@
 import os
+import requests
 
 from celery import Celery
 from celery.utils.log import get_task_logger
@@ -19,12 +20,22 @@ def count(id):
     logger.info(f'Adding task for id: {id}')
     session = Session()
     task = session.query(Tasks).filter_by(id=id).first()
-    s = Scrapper(task.address)
-    err = s.get_page()
-    # if not err:  TODO: error handling
-    task.http_status_code, matches = s.count_matches()
-    task.task_status = 'FINISHED'
-    res = Results(address=task.address, words_count=matches, http_status_code=task.http_status_code)
+    res = Results(address=task.address, words_count=0, http_status_code=0)
+
+    try:
+        scrpr = Scrapper(task.address)
+    except:
+        scrpr = None
+
+    if scrpr:
+        err = scrpr.get_page()
+        if not err:
+            task.http_status_code, matches = scrpr.count_matches()
+            task.task_status = 'FINISHED'
+            res = Results(
+                address=task.address, words_count=matches, http_status_code=task.http_status_code)
+        print(err)
+
     session.add(res)
     session.commit()
     logger.info(task)
