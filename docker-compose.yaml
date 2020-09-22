@@ -43,3 +43,12 @@ services:
         volumes:
             - ./init.sql:/docker-entrypoint-initdb.d/init.sql
         restart: always
+
+     front:
+        build:
+            context: .
+            dockerfile: SF_E8.9_front/Dockerfile.front
+        ports:
+            - 8080:8080
+        depends_on:
+            - back
