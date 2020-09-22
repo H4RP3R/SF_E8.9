@@ -34,7 +34,8 @@ def count(id):
             task.task_status = 'FINISHED'
             res = Results(
                 address=task.address, words_count=matches, http_status_code=task.http_status_code)
-        print(err)
+        else:
+            print(err)
 
     session.add(res)
     session.commit()
