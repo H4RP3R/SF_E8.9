@@ -1,4 +1,5 @@
 __pycache__/
 env/
+SF_E8.9_front/
 *.pyc
 export_variables.sh
